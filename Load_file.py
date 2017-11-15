@@ -19,3 +19,11 @@ def get_values_from_file(file_name):
         else:
             continue
     return time, resp, bp, ecg
+x=str(sys.argv[1])
+get_values_from_file(x)
+#line = file_to_open.readline()
+#if line.__len__() != 0:
+for i in range(len(time)):
+	print ("%.2f \t %.3f \t %.3f \t %.1f" % (time [i], resp [i], bp [i], ecg [i]))
+#else:
+#	print ("end")

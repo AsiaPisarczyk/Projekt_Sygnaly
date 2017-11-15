@@ -1,0 +1,16 @@
+<application>
+  <component name="FileTypeManager" version="17">
+    <ignoreFiles list="*$py.class;*.hprof;*.pyc;*.pyo;*.rbc;*.yarb;*~;.DS_Store;.git;.hg;.svn;CVS;__pycache__;_svn;vssver.scc;vssver2.scc;" />
+    <extensionMap>
+      <mapping pattern="proba" type="PLAIN_TEXT" />
+      <mapping pattern="Proba" type="PLAIN_TEXT" />
+      <mapping pattern="zad5" type="Python" />
+      <mapping pattern="importsys" type="Python" />
+      <mapping pattern="zad" type="Python" />
+      <mapping pattern="zadanie_1" type="Python" />
+      <mapping pattern="dzielenie Emilii" type="Python" />
+      <mapping pattern="3" type="Python" />
+      <mapping pattern="zadanie1" type="Python" />
+    </extensionMap>
+  </component>
+</application>
