@@ -12,10 +12,10 @@ def get_values_from_file(file_name):
         if line[0].isdigit():#bierzemy pod uwagę tylko linie zaczynające się cyfrą (pierwszy el.)
             line = line.replace('\n', '', 1)#usunięcie przejścia do nowej linii
             values = line.split('\t')#utweórz listę, separatorem jest tabulator
-            time.append(float(values.__getitem__(0)))#zbieram wartości czysu (pierwsza kolumna linii
-            resp.append(float(values.__getitem__(1)))
-            bp.append(float(values.__getitem__(2)))
-            ecg.append(float(values.__getitem__(3)))
+            time.append(float(values.__getitem__(0)))#zbieram wartości czasu (pierwsza kolumna linii
+            resp.append(float(values.__getitem__(1)))#zbieram wartości resp (druga kolumna linii
+            bp.append(float(values.__getitem__(2)))#zbieram wartości bp (trzecia kolumna linii
+            ecg.append(float(values.__getitem__(3)))#zbieram wartości ecg (czwarta kolumna linii
         else:
             continue
     return time, resp, bp, ecg
