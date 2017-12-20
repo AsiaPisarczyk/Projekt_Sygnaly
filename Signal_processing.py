@@ -42,6 +42,7 @@ def znajdz_zalamki(ind_p, ind_n, Time, ECG):
     q = np.zeros((2, ilosc_prostokatow))
     r = np.zeros((2, ilosc_prostokatow))
     s = np.zeros((2, ilosc_prostokatow))
+    indq, indr, inds = np.zeros(ilosc_prostokatow, dtype=np.int), np.zeros(ilosc_prostokatow, dtype=np.int), np.zeros(ilosc_prostokatow, dtype=np.int)
     for n in range(ilosc_prostokatow):
         t_temp = Time[ind_p[n]:ind_n[n]]
         s_temp = ECG[ind_p[n]:ind_n[n]]
@@ -56,10 +57,13 @@ def znajdz_zalamki(ind_p, ind_n, Time, ECG):
         S_ind = s_temp[R_ind:-1].tolist().index(S_temp)
         S_ind = S_ind + R_ind
 
-        q[0][n] = Time[ind_p[n] + Q_ind]
+        indq[n] = ind_p[n] + Q_ind
+        q[0][n] = Time[indq[n]]
         q[1][n] = ECG[ind_p[n] + Q_ind]
-        r[0][n] = Time[ind_p[n] + R_ind]
+        indr[n] = ind_p[n] + R_ind
+        r[0][n] = Time[indr[n]]
         r[1][n] = ECG[ind_p[n] + R_ind]
-        s[0][n] = Time[ind_p[n] + S_ind]
+        inds[n] = ind_p[n] + S_ind
+        s[0][n] = Time[inds[n]]
         s[1][n] = ECG[ind_p[n] + S_ind]
-    return q, r, s
+    return q, r, s, indq, indr, inds

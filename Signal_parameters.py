@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from Pan_tompkins import stworz_wykres
-from svm import p1, p2, t1, t2
+from Wykrywanie_pt import znajdz_p_t
 from Load_file import get_values_from_file
-
 
 def basic_parameters(ECG):
     ppValue = max(ECG) - min(ECG)  # amplituda sygnału - wartość międzyszczytowa
@@ -29,6 +28,12 @@ def RR_interval(R):
 
 # odległości pomiędzy początkami załamków P (odległości P-P)
 def PP_interval(P):
+
+    # sprawdzenie czy sygnał nie rozpoczyna częścią załamka P
+    if P[0][0] > P[1][0]:
+        P[0] = P[0][:-1]
+        P[1] = P[1][1:]
+
     N = len(P[0])
     # tablica dwuwymiarowa:
     # pierwszy wymiar - wektor położenia na osi czasu punktów początków kolejnych odległości P-P
@@ -56,14 +61,22 @@ def heart_rate(R):
 
 # czas trwania załamka P
 def P_wave(P):
+    # sprawdzenie czy sygnał nie rozpoczyna częścią załamka P
+    if P[0][0] > P[1][0]:
+        print(P[0][0], P[1][0])
+        P[0] = P[0][:-1]
+        P[1] = P[1][1:]
+
     N = len(P[0])
     # tablica dwuwymiarowa:
     # pierwszy wymiar - wektor położenia na osi czasu punktów początków kolejnych załamków P
     # drugi wymiar - wektor wartości długości kolejnych załaów P
     P_len = np.zeros((2, N))
+
     for i in range(N):
         P_len[0][i] = P[0][i]  # wartości w [s]
         P_len[1][i] = (P[1][i] - P[0][i]) * 1000  # wartości w [ms]
+
     return P_len
 
 
@@ -82,6 +95,12 @@ def QRS_duration(Q, S):
 
 # czas trwania załamka T
 def T_wave(T):
+
+    # sprawdzenie czy sygnał nie rozpoczyna częścią załamka T
+    if T[0][0] > T[1][0]:
+        T[0] = T[0][:-1]
+        T[1] = T[1][1:]
+
     N = len(T[0])
     # tablica dwuwymiarowa:
     # pierwszy wymiar - wektor położenia na osi czasu punktów początków kolejnych załamków T
@@ -93,20 +112,13 @@ def T_wave(T):
     return T_len
 
 
-# wartości średnie wyznaczonych parametrów sygnału
-def mean_values(P, Q, R, S, T):
-    # utworzenie słownika z wartościami średnimi parametrów
-    mean_val = {'mean_RR_interval': np.mean(RR_interval(R)[1]), 'mean_PP_interval': np.mean(PP_interval(P)[1]),
-                'mean_heart_rate': np.mean(heart_rate(R)[1]), 'mean_P_wave': np.mean(P_wave(P)[1]),
-                'mean_QRS_duration': np.mean(QRS_duration(Q, S)[1]), 'mean_T_wave': np.mean(T_wave(T)[1])}
-    return mean_val
-
 # funkcja zwracająca wartości parametrów
 def oblicz_parametry(nazwa_pliku):
     [Time, Resp, BPL, ECG] = get_values_from_file(nazwa_pliku)
-    [ind_p, ind_n, Time, Q, R, S] = stworz_wykres(nazwa_pliku)
-    P = [p1[0], p2[0]]  # położenie na osi czasu: pierwszy wymiar - początki fal P, drugi wymiar - końce fal P
-    T = [t1[0], t2[0]]  # położenie na osi czasu: pierwszy wymiar - początki fal T, drugi wymiar - końce fal T
+    [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    P = [p1, p2]  # położenie na osi czasu: pierwszy wymiar - początki fal P, drugi wymiar - końce fal P
+    T = [t1, t2]  # położenie na osi czasu: pierwszy wymiar - początki fal T, drugi wymiar - końce fal T
 
     ppValue, meanValue = basic_parameters(ECG)
     RR = RR_interval(R)
@@ -115,15 +127,29 @@ def oblicz_parametry(nazwa_pliku):
     P_len = P_wave(P)
     QRS_dur = QRS_duration(Q, S)
     T_len = T_wave(T)
-    mean_val = mean_values(P, Q, R, S, T)
 
-    return ppValue, meanValue, RR, PP, HR, P_len, QRS_dur, T_len, mean_val
+    return ppValue, meanValue, RR, PP, HR, P_len, QRS_dur, T_len
+
+# wartości średnie wyznaczonych parametrów sygnału
+def mean_values(nazwa_pliku):
+    [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    P = [p1, p2]
+    T = [t1, t2]
+
+    # utworzenie słownika z wartościami średnimi parametrów
+    mean_val = {'mean_RR_interval': np.mean(RR_interval(R)[1]), 'mean_PP_interval': np.mean(PP_interval(P)[1]),
+                'mean_heart_rate': np.mean(heart_rate(R)[1]), 'mean_P_wave': np.mean(P_wave(P)[1]),
+                'mean_QRS_duration': np.mean(QRS_duration(Q, S)[1]), 'mean_T_wave': np.mean(T_wave(T)[1])}
+    return mean_val
+
 
 # funkcja rysująca wykresy
 def wykresy_parametrow(nazwa_pliku):
-    [ind_p, ind_n, Time, Q, R, S] = stworz_wykres(nazwa_pliku)
-    P = [p1[0], p2[0]]  # położenie na osi czasu: pierwszy wymiar - początki fal P, drugi wymiar - końce fal P
-    T = [t1[0], t2[0]]  # położenie na osi czasu: pierwszy wymiar - początki fal T, drugi wymiar - końce fal T
+    [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    P = [p1, p2]
+    T = [t1, t2]
 
     # wykresy: tętno, R-R, P-P
     fig1, (ax1, ax2, ax3) = plt.subplots(3, 1)
@@ -160,8 +186,8 @@ def wykresy_parametrow(nazwa_pliku):
     ax1.set_xlabel('czas [s]')
     ax1.set_ylabel('szerokość P [ms]')
     ax1.set_xlim([0, P_wave(P)[0][-1] + 0.5])
-    ax1.set_ylim([0, 140])
-    ax1.plot(P_wave(P)[0], [120] * len(P_wave(P)[0]), '-r')
+    ax1.set_ylim([0, 350])
+    ax1.plot(P_wave(P)[0], [250] * len(P_wave(P)[0]), '-r')
 
     ax2.scatter(QRS_duration(Q, S)[0], QRS_duration(Q, S)[1])
     ax2.set_xlabel('czas [s]')
@@ -175,7 +201,8 @@ def wykresy_parametrow(nazwa_pliku):
     ax3.set_xlabel('czas [s]')
     ax3.set_ylabel('szerokość T [ms]')
     ax3.set_xlim([0, T_wave(T)[0][-1] + 0.5])
-    ax3.set_ylim([60, 300])
+    ax3.set_ylim([60, 350])
     ax3.plot(T_wave(T)[0], [100] * len(T_wave(T)[0]), '-r')
-    ax3.plot(T_wave(T)[0], [250] * len(T_wave(T)[0]), '-r')
+    ax3.plot(T_wave(T)[0], [300] * len(T_wave(T)[0]), '-r')
     plt.show()
+
