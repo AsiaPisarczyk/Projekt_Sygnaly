@@ -9,7 +9,6 @@ def znajdz_index(lista, start, stop, wartosc):
         diff = abs(val - wartosc)
         if diff < 0.001:
             return i + start
-    print('Dupa')
     return 0
 
 
@@ -36,7 +35,8 @@ def znajdz_p_t(nazwa_pliku):
     licznik = min(len(ind_n), len(ind_p))
     t = np.zeros((2, licznik - 1))
     p = np.zeros((2, licznik - 1))
-    p1,p2, t1, t2 = np.zeros(licznik - 1), np.zeros(licznik - 1), np.zeros(licznik - 1), np.zeros(licznik - 1)
+    p1, p2, t1, t2 = np.zeros(licznik - 1), np.zeros(licznik - 1), np.zeros(licznik - 1), np.zeros(licznik - 1)
+
     for i in range(licznik - 1):
         mean_np = int((ind_n[i] + ind_p[i + 1]) / 2)
         t_value = max(ECG[ind_n[i] : mean_np])
@@ -52,9 +52,8 @@ def znajdz_p_t(nazwa_pliku):
         p[1, i] = p_value
         g1, g2 = znajdz_granice(ECG, p_index)
         p1[i] = Time[g1]
-        p2[i] = ECG[g1]
+        p2[i] = Time[ind_q[i]]
     pp = plt.plot(Time, ECG, '-', r[0], r[1], 'ro', q[0], q[1], '^y', s[0], s[1], 'ks', p[0], p[1], 'bo', t[0], t[1], '^g')
     plt.xlim([10, 15])
     plt.show()
     return p1, p2, t1, t2
-
