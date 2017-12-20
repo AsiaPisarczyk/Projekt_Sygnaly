@@ -50,13 +50,8 @@ def stworz_wykres(nazwa_pliku):
     ECG_mean = np.mean(ECG_integral_filter)
 
     prostokat = funkcja_prostokatna(ECG_integral_filter, ECG_mean)
-    p2 = plt.plot(Time, ECG_integral_filter, Time, prostokat)
-    #plt.show()
 
     delay = 35  # 5+15+1+14
-    p3 = plt.plot(Time, ECG_norm, Time - Time[delay - 1], prostokat)
-    plt.xlim([0, 3])
-    #plt.show()
 
     # DETEKCJA QRS
     # pochodna prostokata
@@ -64,9 +59,7 @@ def stworz_wykres(nazwa_pliku):
 
     ind_p, ind_n = znajdz_zmiany_nachylenia(prostokat_diff, delay)
 
-    q, r, s = znajdz_zalamki(ind_p, ind_n, Time, ECG)
+    q, r, s, ind_q, ind_r, ind_s = znajdz_zalamki(ind_p, ind_n, Time, ECG)
+    ind_r = r[0]
 
-    pp = plt.plot(Time, ECG, '-', r[0], r[1], 'ro', q[0], q[1], '^g', s[0], s[1], 'ks')
-    plt.xlim([10, 13])
-    plt.show()
-    return (ind_p, ind_n, Time, q, r, s)
+    return ind_p, ind_n, Time, ECG, q, r, s, ind_q, ind_r, ind_s
