@@ -69,3 +69,4 @@ def stworz_wykres(nazwa_pliku):
     pp = plt.plot(Time, ECG, '-', r[0], r[1], 'ro', q[0], q[1], '^g', s[0], s[1], 'ks')
     plt.xlim([10, 13])
     plt.show()
+    return (ind_p, ind_n, Time, q, r, s)
