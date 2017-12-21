@@ -114,9 +114,9 @@ def T_wave(T):
 
 # funkcja zwracająca wartości parametrów
 def oblicz_parametry(nazwa_pliku):
-    [Time, Resp, BPL, ECG] = get_values_from_file(nazwa_pliku)
+    #[Time, Resp, BPL, ECG] = get_values_from_file(nazwa_pliku)
     [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
-    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku, False)
     P = [p1, p2]  # położenie na osi czasu: pierwszy wymiar - początki fal P, drugi wymiar - końce fal P
     T = [t1, t2]  # położenie na osi czasu: pierwszy wymiar - początki fal T, drugi wymiar - końce fal T
 
@@ -133,7 +133,7 @@ def oblicz_parametry(nazwa_pliku):
 # wartości średnie wyznaczonych parametrów sygnału
 def mean_values(nazwa_pliku):
     [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
-    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku, False)
     P = [p1, p2]
     T = [t1, t2]
 
@@ -147,7 +147,7 @@ def mean_values(nazwa_pliku):
 # funkcja rysująca wykresy
 def wykresy_parametrow(nazwa_pliku):
     [ind_p, ind_n, Time, ECG, Q, R, S, ind_q, ind_r, ind_s] = stworz_wykres(nazwa_pliku)
-    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku)
+    [p1, p2, t1, t2] = znajdz_p_t(nazwa_pliku, False)
     P = [p1, p2]
     T = [t1, t2]
 

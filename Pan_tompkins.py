@@ -5,7 +5,6 @@ from Load_file import get_values_from_file
 from Signal_processing import detrendyzacja_normalizacja, filtracja, funkcja_prostokatna, znajdz_zmiany_nachylenia, znajdz_zalamki
 
 def stworz_wykres(nazwa_pliku):
-    plt.close('all')
 
     # wczytanie danych
     [Time, Resp, BPL, ECG] = get_values_from_file(nazwa_pliku)

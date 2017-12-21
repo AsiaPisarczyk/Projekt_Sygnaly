@@ -30,7 +30,7 @@ def znajdz_granice(ECG, index):
     return g1, g2
 
 
-def znajdz_p_t(nazwa_pliku):
+def znajdz_p_t(nazwa_pliku, draw_plot):
     ind_p, ind_n, Time, ECG, q, r, s, ind_q, ind_r, ind_s = stworz_wykres(nazwa_pliku)
     licznik = min(len(ind_n), len(ind_p))
     t = np.zeros((2, licznik - 1))
@@ -53,7 +53,8 @@ def znajdz_p_t(nazwa_pliku):
         g1, g2 = znajdz_granice(ECG, p_index)
         p1[i] = Time[g1]
         p2[i] = Time[ind_q[i]]
-    pp = plt.plot(Time, ECG, '-', r[0], r[1], 'ro', q[0], q[1], '^y', s[0], s[1], 'ks', p[0], p[1], 'bo', t[0], t[1], '^g')
-    plt.xlim([10, 15])
-    plt.show()
+    if draw_plot:
+        pp = plt.plot(Time, ECG, '-', r[0], r[1], 'ro', q[0], q[1], '^y', s[0], s[1], 'ks', p[0], p[1], 'bo', t[0], t[1], '^g')
+        plt.xlim([10, 15])
+        plt.show()
     return p1, p2, t1, t2
